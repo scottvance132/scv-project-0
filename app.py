@@ -21,7 +21,13 @@ print(c1.get_account_info())
 # print(c1.get_username())
 
 customers = {
-    c1.username: c1.get_account_info()
+    c1.get_username(): {
+        "first_name": c1.get_first_name(),
+        "last_name": c1.get_last_name(),
+        "birthday": c1.get_birthday(),
+        "username": c1.get_username(),
+        "account_info": c1.get_account_info()
+    }
 }
 print(customers)
 
@@ -48,11 +54,10 @@ def get_all_customers():
 
 @app.route("/customers/<username>")
 def get_customer_by_username(username):
-    customers_by_username = {}
     if username in customers:
-        customers_by_username['username'] = username
+        customers['username'] = username
         return{
-            "username": customers_by_username
+            "username": customers
         }
     else:
         return{
@@ -73,7 +78,8 @@ def create_customer():
         customers[(data['first_name'])] = {
             "first_name": data['first_name'],
             "last_name": data['last_name'],
-            "birthday": data['birthday']
+            "birthday": data['birthday'],
+            "account_info": data['account_info']
         }
 
         return {
