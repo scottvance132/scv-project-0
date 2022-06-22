@@ -1,4 +1,4 @@
-from service.customer import Customer, CustomerEncoder
+from service.customer import Customer
 from flask import Flask, request
 
 app = Flask(__name__)
@@ -20,12 +20,10 @@ print(c1.get_account_info())
 # c1.set_birthday("12/12")
 # print(c1.get_username())
 
-customers = [
-    c1
-]
-
-
-# c1JSONData = json.dumps(c1, indent=4, cls=CustomerEncoder)
+customers = {
+    c1.username: c1.get_account_info()
+}
+print(customers)
 
 
 @app.route("/test")
@@ -48,4 +46,39 @@ def get_all_customers():
     }, 200
 
 
-# app.run(port=8080)
+@app.route("/customers/<username>")
+def get_customer_by_username(username):
+    customers_by_username = {}
+    if username in customers:
+        customers_by_username['username'] = username
+        return{
+            "username": customers_by_username
+        }
+    else:
+        return{
+            "message": f"User with username {username} does not exist!"
+        }, 404
+
+
+@app.route("/customers", methods=['POST'])
+def create_customer():
+    data = request.get_json()
+    print(data)
+
+    if data['first_name'] in customers:
+        return{
+            "message": f"Customer with username {data['username']} already exists! Cannot create this customer"
+        }, 400
+    else:
+        customers[(data['first_name'])] = {
+            "first_name": data['first_name'],
+            "last_name": data['last_name'],
+            "birthday": data['birthday']
+        }
+
+        return {
+            'customers': customers
+        }, 201
+
+
+app.run(port=8080)

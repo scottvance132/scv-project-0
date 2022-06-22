@@ -1,6 +1,3 @@
-from json import JSONEncoder
-
-
 class Customer:
     def __init__(self, first_name, last_name, birthday, account_type, account_balance):
         self.__first_name = first_name
@@ -41,8 +38,3 @@ class Customer:
 
     def set_account_info(self, account_type, account_balance):
         self.__account = {"type": account_type, "balance": account_balance}
-
-
-class CustomerEncoder(JSONEncoder):
-    def default(self, o):
-        return o.__dict__
