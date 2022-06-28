@@ -1,10 +1,9 @@
 class Customer:
-    def __init__(self, first_name, last_name, birthday, account_type, account_balance):
+    def __init__(self, username, first_name, last_name, birthday):
         self.__first_name = first_name
         self.__last_name = last_name
         self.__birthday = birthday.replace("/", '')
         self.username = f"{self.__first_name}{self.__last_name}{self.__birthday}"
-        self.__account = {"type": account_type, "balance": account_balance}
 
     def __str__(self):
         return f"Customer Object has the username: {self.username}"
@@ -21,9 +20,6 @@ class Customer:
     def get_username(self):
         return self.username
 
-    def get_account_info(self):
-        return self.__account
-
     def set_first_name(self, first_name):
         self.__first_name = first_name
         self.username = f"{self.__first_name}{self.__last_name}{self.__birthday}"
@@ -36,5 +32,10 @@ class Customer:
         self.__birthday = birthday
         self.username = f"{self.__first_name}{self.__last_name}{self.__birthday}"
 
-    def set_account_info(self, account_type, account_balance):
-        self.__account = {"type": account_type, "balance": account_balance}
+    def to_dict(self):
+        return {
+            "username": self.username,
+            "first_name": self.__first_name,
+            "last_name": self.__last_name,
+            "birthday": self.__birthday
+        }
