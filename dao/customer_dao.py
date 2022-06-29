@@ -23,7 +23,7 @@ class CustomerDao:
 
                 return my_list_of_cus_objs
 
-    def get_customer_by_username(self, c_id):
+    def get_customer_by_id(self, c_id):
         with psycopg.connect(host="127.0.0.1", port='5432', dbname="p0db", user="postgres",
                              password='mAshgAey208') as conn:
             with conn.cursor() as cur:
