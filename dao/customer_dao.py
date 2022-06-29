@@ -42,15 +42,11 @@ class CustomerDao:
 
                 return Customer(c_id, first_name, last_name, birthday, username)
 
-
-
     def add_customer(self, customer_object):
         fn_to_add = customer_object.first_name
         ln_to_add = customer_object.last_name
         bday_to_add = customer_object.birthday
         username_to_add = customer_object.username
-
-
 
         with psycopg.connect(host="127.0.0.1", port='5432', dbname="p0db", user="postgres",
                              password='mAshgAey208') as conn:
