@@ -1,4 +1,5 @@
 from dao.customer_dao import CustomerDao
+from exception.cus_not_found import CustomerNotFoundError
 
 
 class CustomerService:
@@ -22,6 +23,10 @@ class CustomerService:
         added_customer_object = self.customer_dao.add_customer(customer_object)
         return added_customer_object.to_dict()
 
-    def edit_customer_by_username(self, username, customer_object):
-        edited_customer_object = self.customer_dao.edit_customer_by_username(username, customer_object)
+    def update_customer_by_id(self, customer_object):
+        edited_customer_object = self.customer_dao.update_customer_by_id(customer_object)
         return edited_customer_object.to_dict()
+
+    def delete_customer_by_id(self, cus_id):
+        if not self.customer_dao.delete_customer_by_id(cus_id):
+            raise CustomerNotFoundError(f"Customer with id {cus_id} was not found")
