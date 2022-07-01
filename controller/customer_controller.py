@@ -42,11 +42,16 @@ def add_customer():
 
 @cc.route('/customers/<customer_id>', methods=['PUT'])
 def update_customer_by_id(customer_id):
-    customer_json_dictionary = request.get_json()
-    return customer_service.update_customer_by_id(Customer(customer_id, customer_json_dictionary['first_name'],
-                                                           customer_json_dictionary['last_name'],
+    try:
+        customer_json_dictionary = request.get_json()
+        return customer_service.update_customer_by_id(Customer(customer_id, customer_json_dictionary['first_name'],
+                                                               customer_json_dictionary['last_name'],
                                                            customer_json_dictionary['birthday'],
                                                            customer_json_dictionary['username']))
+    except CustomerNotFoundError as e:
+        return {
+            "message": str(e)
+        }, 404
 
 
 @cc.route('/customers/<customer_id>', methods=['DELETE'])
