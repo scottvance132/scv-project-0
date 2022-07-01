@@ -7,14 +7,34 @@ from exception.cus_not_found import CustomerNotFoundError
 class AccService:
 
     def __init__(self):
+        # self.test = None
         self.acc_dao = AccDao()
         self.customer_dao = CustomerDao()
 
-    def get_all_accounts_by_user(self, customer_id):
+    def get_all_accounts_by_customer_id(self, customer_id, query_1, query_2):
         if self.customer_dao.get_customer_by_id(customer_id) is None:
             raise CustomerNotFoundError(f"Customer with id {customer_id} was not found")
 
-        return list(map(lambda a: a.to_dict(), self.acc_dao.get_all_accounts_by_customer_id(customer_id)))
+        if query_1 is None and query_2 is None:
+            return list(map(lambda a: a.to_dict(), self.acc_dao.get_all_accounts_by_customer_id(customer_id)))
+
+        elif query_1 is not None and query_2 is not None:
+            return list(map(lambda a: a.to_dict(), self.acc_dao.get_all_accounts_between_by_customer_id(customer_id,
+                                                                                                        query_1,
+                                                                                                        query_2)))
+
+        elif query_1 is not None:
+            return list(map(lambda a: a.to_dict(), self.acc_dao.get_all_accounts_greater_by_customer_id(customer_id,
+                                                                                                        query_1)))
+
+        elif query_2 is not None:
+            return list(map(lambda a: a.to_dict(), self.acc_dao.get_all_accounts_less_by_customer_id(customer_id,
+                                                                                                     query_2)))
+
+        else:
+            return []
+
+
 
     def get_account_by_customer_id_and_account_id(self, customer_id, account_id):
         if self.customer_dao.get_customer_by_id(customer_id) is None:

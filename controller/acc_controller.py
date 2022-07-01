@@ -12,14 +12,18 @@ acc_service = AccService()
 
 @ac.route('/customers/<customer_id>/accounts')
 def get_all_accounts_by_customer_id(customer_id):
+    args = request.args
+    balance_gt = args.get('balanceGreaterThan')
+    balance_lt = args.get('balanceLessThan')
+
     try:
         return {
-            "accounts": acc_service.get_all_accounts_by_user(customer_id)
+            "accounts": acc_service.get_all_accounts_by_customer_id(customer_id, balance_gt, balance_lt)
         }
     except CustomerNotFoundError as e:
         return {
-            "message": str(e)
-        }, 404
+                   "message": str(e)
+               }, 404
 
 
 @ac.route('/customers/<customer_id>/accounts/<account_id>')

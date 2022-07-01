@@ -17,6 +17,46 @@ class AccDao:
 
                 return acc_list
 
+    def get_all_accounts_greater_by_customer_id(self, customer_id, query_value):
+        with psycopg.connect(host="127.0.0.1", port='5432', dbname="p0db", user="postgres",
+                             password='mAshgAey208') as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT * FROM accounts WHERE c_id = %s and a_balance > %s", (customer_id, query_value))
+
+                acc_g_list = []
+
+                for row in cur:
+                    acc_g_list.append(Account(row[0], row[1], row[2], row[3]))
+
+                return acc_g_list
+
+    def get_all_accounts_less_by_customer_id(self, customer_id, query_value):
+        with psycopg.connect(host="127.0.0.1", port='5432', dbname="p0db", user="postgres",
+                             password='mAshgAey208') as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT * FROM accounts WHERE c_id = %s and a_balance < %s", (customer_id, query_value))
+
+                acc_l_list = []
+
+                for row in cur:
+                    acc_l_list.append(Account(row[0], row[1], row[2], row[3]))
+
+                return acc_l_list
+
+    def get_all_accounts_between_by_customer_id(self, customer_id, query_value1, query_value2):
+        with psycopg.connect(host="127.0.0.1", port='5432', dbname="p0db", user="postgres",
+                             password='mAshgAey208') as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT * FROM accounts WHERE c_id = %s and a_balance > %s AND a_balance < %s",
+                            (customer_id, query_value1, query_value2))
+
+                acc_b_list = []
+
+                for row in cur:
+                    acc_b_list.append(Account(row[0], row[1], row[2], row[3]))
+
+                return acc_b_list
+
     def get_account_by_customer_id_and_account_id(self, customer_id, account_id):
         with psycopg.connect(host="127.0.0.1", port='5432', dbname="p0db", user="postgres",
                              password='mAshgAey208') as conn:
