@@ -65,3 +65,18 @@ class AccDao:
 
                 return Account(updated_acc_row[0], updated_acc_row[1], updated_acc_row[2], updated_acc_row[3])
 
+    def delete_account_by_customer_id_and_account_id(self, c_id, acc_id):
+        with psycopg.connect(host="127.0.0.1", port='5432', dbname="p0db", user="postgres",
+                             password='mAshgAey208') as conn:
+            with conn.cursor() as cur:
+                cur.execute('DELETE FROM accounts WHERE c_id = %s AND id = %s', (c_id, acc_id))
+
+                rows_deleted = cur.rowcount
+                print(rows_deleted)
+
+                if rows_deleted != 1:
+                    return False
+                else:
+                    conn.commit()
+                    return True
+

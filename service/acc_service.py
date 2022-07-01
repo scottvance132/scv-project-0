@@ -33,3 +33,7 @@ class AccService:
     def update_account_by_customer_id_and_account_id(self, acc_obj):
         edited_acc_obj = self.acc_dao.update_account_by_customer_id_and_account_id(acc_obj)
         return edited_acc_obj.to_dict()
+
+    def delete_account_by_customer_id_and_account_id(self, c_id, a_id):
+        if not self.acc_dao.delete_account_by_customer_id_and_account_id(c_id, a_id):
+            raise AccountNotFoundError(f"Account with id {a_id} was not found for customer with id {c_id}")

@@ -53,4 +53,12 @@ def update_account_by_customer_id_and_account_id(customer_id, account_id):
 
 @ac.route('/customers/<customer_id>/accounts/<account_id>', methods=['DELETE'])
 def delete_account_by_customer_id_and_account_id(customer_id, account_id):
-    pass
+    try:
+        acc_service.delete_account_by_customer_id_and_account_id(customer_id, account_id)
+        return {
+            "message": f"Account with id {account_id} belonging to customer with id {customer_id} deleted successfully"
+        }
+    except AccountNotFoundError as e:
+        return {
+            "message": str(e)
+        }, 404
