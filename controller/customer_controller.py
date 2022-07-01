@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 
 from exception.cus_not_found import CustomerNotFoundError
+from exception.invalid_param import InvalidParameterError
 from model.customer import Customer
 from service.customer_service import CustomerService
 
@@ -27,11 +28,16 @@ def get_customer_by_id(customer_id):
 
 @cc.route('/customers', methods=['POST'])
 def add_customer():
-    customer_json_dictionary = request.get_json()
-    customer_object = Customer(None, customer_json_dictionary['first_name'], customer_json_dictionary['last_name'],
-                               customer_json_dictionary['birthday'], customer_json_dictionary['username'])
+    try:
+        customer_json_dictionary = request.get_json()
+        customer_object = Customer(None, customer_json_dictionary['first_name'], customer_json_dictionary['last_name'],
+                                   customer_json_dictionary['birthday'], customer_json_dictionary['username'])
 
-    return customer_service.add_customer(customer_object), 201
+        return customer_service.add_customer(customer_object), 201
+    except InvalidParameterError as e:
+        return {
+            "message": str(e)
+        }, 400
 
 
 @cc.route('/customers/<customer_id>', methods=['PUT'])
