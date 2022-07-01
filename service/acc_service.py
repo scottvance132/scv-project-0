@@ -11,6 +11,10 @@ class AccService:
         self.acc_dao = AccDao()
         self.customer_dao = CustomerDao()
 
+    def get_all_accounts(self):
+        list_of_accounts = self.acc_dao.get_all_accounts()
+        return list(map(lambda a: a.to_dict(), list_of_accounts))
+
     def get_all_accounts_by_customer_id(self, customer_id, query_1, query_2):
         if self.customer_dao.get_customer_by_id(customer_id) is None:
             raise CustomerNotFoundError(f"Customer with id {customer_id} was not found")
@@ -34,13 +38,11 @@ class AccService:
         else:
             return []
 
-
-
     def get_account_by_customer_id_and_account_id(self, customer_id, account_id):
         if self.customer_dao.get_customer_by_id(customer_id) is None:
             raise CustomerNotFoundError(f"Customer with id {customer_id} was not found")
         elif self.acc_dao.get_account_by_customer_id_and_account_id(customer_id, account_id) is None:
-            raise AccountNotFoundError(f"Account with id {account_id} was not found")
+            raise AccountNotFoundError(f"Customer with id {customer_id} does not have account with id {account_id}")
 
         return self.acc_dao.get_account_by_customer_id_and_account_id(customer_id, account_id).to_dict()
 
@@ -56,4 +58,4 @@ class AccService:
 
     def delete_account_by_customer_id_and_account_id(self, c_id, a_id):
         if not self.acc_dao.delete_account_by_customer_id_and_account_id(c_id, a_id):
-            raise AccountNotFoundError(f"Account with id {a_id} was not found for customer with id {c_id}")
+            raise AccountNotFoundError(f"Customer with id {c_id} does not have an account with id {a_id}")

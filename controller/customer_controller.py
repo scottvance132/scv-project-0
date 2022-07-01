@@ -10,18 +10,18 @@ customer_service = CustomerService()
 
 @cc.route('/customers')
 def get_all_customers():
-    return{
+    return {
         "customers": customer_service.get_all_customers()
     }
 
 
-@cc.route('/customers/<username>')
-def get_customer_by_id(username):
+@cc.route('/customers/<customer_id>')
+def get_customer_by_id(customer_id):
     try:
-        return customer_service.get_customer_by_id(username)
-    except KeyError as e:
-        return{
-            "message": f"Customer with username {username} was not found!"
+        return customer_service.get_customer_by_id(customer_id)
+    except CustomerNotFoundError as e:
+        return {
+            "message": str(e)
         }, 404
 
 

@@ -10,6 +10,13 @@ ac = Blueprint('acc_controller', __name__)
 acc_service = AccService()
 
 
+@ac.route('/accounts')
+def get_all_accounts():
+    return {
+        "accounts": acc_service.get_all_accounts()
+    }
+
+
 @ac.route('/customers/<customer_id>/accounts')
 def get_all_accounts_by_customer_id(customer_id):
     args = request.args
