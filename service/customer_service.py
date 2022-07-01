@@ -15,8 +15,8 @@ class CustomerService:
 
         return list(map(lambda x: x.to_dict(), list_of_customer_objects))
 
-    def get_customer_by_username(self, username):
-        customer_object = self.customer_dao.get_customer_by_username(username)
+    def get_customer_by_id(self, customer_id):
+        customer_object = self.customer_dao.get_customer_by_id(customer_id)
         return customer_object.to_dict()
 
     def add_customer(self, customer_object):

@@ -16,9 +16,9 @@ def get_all_customers():
 
 
 @cc.route('/customers/<username>')
-def get_customer_by_username(username):
+def get_customer_by_id(username):
     try:
-        return customer_service.get_customer_by_username(username)
+        return customer_service.get_customer_by_id(username)
     except KeyError as e:
         return{
             "message": f"Customer with username {username} was not found!"
