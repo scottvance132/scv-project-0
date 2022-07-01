@@ -45,8 +45,10 @@ def add_account_for_customer_by_customer_id(customer_id):
 
 
 @ac.route('/customers/<customer_id>/accounts/<account_id>', methods=['PUT'])
-def edit_account_by_customer_id_and_account_id(customer_id, account_id):
-    pass
+def update_account_by_customer_id_and_account_id(customer_id, account_id):
+    acc_json_dict = request.get_json()
+    return acc_service.update_account_by_customer_id_and_account_id(Account(account_id, acc_json_dict['a_type'],
+                                                                            acc_json_dict['a_balance'], customer_id))
 
 
 @ac.route('/customers/<customer_id>/accounts/<account_id>', methods=['DELETE'])

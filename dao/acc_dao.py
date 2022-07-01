@@ -49,3 +49,19 @@ class AccDao:
                 conn.commit()
 
                 return Account(inserted_acc_row[0], inserted_acc_row[1], inserted_acc_row[2], inserted_acc_row[3])
+
+    def update_account_by_customer_id_and_account_id(self, acc_obj):
+        with psycopg.connect(host="127.0.0.1", port='5432', dbname="p0db", user="postgres",
+                             password='mAshgAey208') as conn:
+            with conn.cursor() as cur:
+                cur.execute('UPDATE accounts SET a_type = %s, a_balance = %s WHERE id = %s AND c_id = %s RETURNING *',
+                            (acc_obj.type, acc_obj.balance, acc_obj.id, acc_obj.c_id))
+
+                conn.commit()
+
+                updated_acc_row = cur.fetchone()
+                if updated_acc_row is None:
+                    return None
+
+                return Account(updated_acc_row[0], updated_acc_row[1], updated_acc_row[2], updated_acc_row[3])
+

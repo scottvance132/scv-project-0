@@ -29,3 +29,7 @@ class AccService:
         #     raise CustomerNotFoundError(f"Customer with id {customer_id} was not found")
 
         return self.acc_dao.add_account_for_customer_by_customer_id(account_id).to_dict()
+
+    def update_account_by_customer_id_and_account_id(self, acc_obj):
+        edited_acc_obj = self.acc_dao.update_account_by_customer_id_and_account_id(acc_obj)
+        return edited_acc_obj.to_dict()
