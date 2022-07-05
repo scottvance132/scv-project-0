@@ -1,6 +1,7 @@
 from dao.customer_dao import CustomerDao
 from exception.cus_not_found import CustomerNotFoundError
 from exception.invalid_param import InvalidParameterError
+from utility.contains_letter import containsLetter
 from utility.contains_num import containsNumber
 from utility.contains_space import containsSpace
 from utility.contains_spec_char import containsSpecChar
@@ -32,6 +33,8 @@ class CustomerService:
         elif containsSpecChar(customer_object.first_name) or containsSpecChar(customer_object.last_name) or \
                 containsSpecChar(customer_object.birthday) or containsSpecChar(customer_object.username):
             raise InvalidParameterError(f"Invalid input (special character) for the new customer! Please try again")
+        elif containsLetter(customer_object.birthday):
+            raise InvalidParameterError(f"Invalid input (letter) for the new birthday! Please try again")
         else:
             print('error not caught')
             return self.customer_dao.add_customer(customer_object).to_dict()
