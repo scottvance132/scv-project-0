@@ -2,6 +2,9 @@ from flask import Blueprint, request
 
 from exception.acc_not_found import AccountNotFoundError
 from exception.cus_not_found import CustomerNotFoundError
+from exception.invalid_acc_balance import InvalidAccountBalanceError
+from exception.invalid_acc_type import InvalidAccountTypeError
+from exception.invalid_param import InvalidParameterError
 from model.acc import Account
 from service.acc_service import AccService
 
@@ -51,15 +54,36 @@ def get_account_by_customer_id_and_account_id(customer_id, account_id):
 def add_account_for_customer_by_customer_id(customer_id):
     acc_json_dict = request.get_json()
     acc_obj = Account(None, acc_json_dict['a_type'], acc_json_dict['a_balance'], acc_json_dict['customer_id'])
-
-    return acc_service.add_account_for_customer_by_customer_id(acc_obj), 201
+    try:
+        return acc_service.add_account_for_customer_by_customer_id(acc_obj), 201
+    except CustomerNotFoundError as e:
+        return {
+            "message": str(e)
+        }, 404
+    except InvalidAccountTypeError as e:
+        return {
+            "message": str(e)
+        }, 400
+    except InvalidAccountBalanceError as e:
+        return {
+            "message": str(e)
+        }, 400
+    except InvalidParameterError as e:
+        return {
+            "message": str(e)
+        }, 400
 
 
 @ac.route('/customers/<customer_id>/accounts/<account_id>', methods=['PUT'])
 def update_account_by_customer_id_and_account_id(customer_id, account_id):
-    acc_json_dict = request.get_json()
-    return acc_service.update_account_by_customer_id_and_account_id(Account(account_id, acc_json_dict['a_type'],
-                                                                            acc_json_dict['a_balance'], customer_id))
+    try:
+        acc_json_dict = request.get_json()
+        return acc_service.update_account_by_customer_id_and_account_id(Account(account_id, acc_json_dict['a_type'],
+                                                                        acc_json_dict['a_balance'], customer_id))
+    except AccountNotFoundError as e:
+        return {
+            "message": str(e)
+        }, 404
 
 
 @ac.route('/customers/<customer_id>/accounts/<account_id>', methods=['DELETE'])

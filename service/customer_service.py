@@ -1,5 +1,6 @@
 from dao.customer_dao import CustomerDao
 from exception.cus_not_found import CustomerNotFoundError
+from exception.customer_exists import CustomerAlreadyExistsError
 from exception.invalid_param import InvalidParameterError
 from utility.contains_letter import containsLetter
 from utility.contains_num import containsNumber
@@ -18,10 +19,10 @@ class CustomerService:
         return list(map(lambda x: x.to_dict(), list_of_customer_objects))
 
     def get_customer_by_id(self, customer_id):
-        if self.customer_dao.get_customer_by_id(customer_id) is None:
+        if self.customer_dao.get_customer_by_username(customer_id) is None:
             raise CustomerNotFoundError(f"Customer with id {customer_id} was not found")
 
-        return self.customer_dao.get_customer_by_id(customer_id).to_dict()
+        return self.customer_dao.get_customer_by_username(customer_id).to_dict()
 
     def add_customer(self, customer_object):
         if containsSpace(customer_object.first_name) or containsSpace(customer_object.last_name) or \
@@ -35,6 +36,8 @@ class CustomerService:
             raise InvalidParameterError(f"Invalid input (special character) for the new customer! Please try again")
         elif containsLetter(customer_object.birthday):
             raise InvalidParameterError(f"Invalid input (letter) for the new birthday! Please try again")
+        elif self.customer_dao.get_customer_by_username(customer_object.username) is not None:
+            raise CustomerAlreadyExistsError(f"Customer with username {customer_object.username} already exists")
         else:
             print('error not caught')
             return self.customer_dao.add_customer(customer_object).to_dict()

@@ -1,0 +1,2 @@
+class InvalidAccountBalanceError(Exception):
+    pass
