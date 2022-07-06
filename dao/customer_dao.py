@@ -23,12 +23,12 @@ class CustomerDao:
 
                 return my_list_of_cus_objs
 
-    def get_customer_by_username(self, c_id):
+    def get_customer_by_username(self, username):
         with psycopg.connect(host="127.0.0.1", port='5432', dbname="p0db", user="postgres",
                              password='mAshgAey208') as conn:
             with conn.cursor() as cur:
 
-                cur.execute('SELECT * FROM customers WHERE id = %s', (c_id,))
+                cur.execute('SELECT * FROM customers WHERE username = %s', (username,))
 
                 c_row = cur.fetchone()
                 if not c_row:
@@ -51,7 +51,7 @@ class CustomerDao:
         with psycopg.connect(host="127.0.0.1", port='5432', dbname="p0db", user="postgres",
                              password='mAshgAey208') as conn:
             with conn.cursor() as cur:
-                cur.execute("INSERT INTO customers (first_name, last_name, birthday, username) VALUES (%s, %s, %s, %s)"
+                cur.execute("INSERT INTO customers (first_name, last_name, birthday, username) VALUES (%s, %s, %s, %s) "
                             "RETURNING *", (fn_to_add, ln_to_add, bday_to_add, username_to_add))
 
                 inserted_cus_row = cur.fetchone()

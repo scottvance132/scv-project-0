@@ -18,11 +18,11 @@ class CustomerService:
 
         return list(map(lambda x: x.to_dict(), list_of_customer_objects))
 
-    def get_customer_by_id(self, customer_id):
-        if self.customer_dao.get_customer_by_username(customer_id) is None:
-            raise CustomerNotFoundError(f"Customer with id {customer_id} was not found")
+    def get_customer_by_username(self, username):
+        if self.customer_dao.get_customer_by_username(username) is None:
+            raise CustomerNotFoundError(f"Customer with username {username} was not found")
 
-        return self.customer_dao.get_customer_by_username(customer_id).to_dict()
+        return self.customer_dao.get_customer_by_username(username).to_dict()
 
     def add_customer(self, customer_object):
         if containsSpace(customer_object.first_name) or containsSpace(customer_object.last_name) or \

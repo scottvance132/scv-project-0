@@ -17,10 +17,10 @@ def get_all_customers():
     }
 
 
-@cc.route('/customers/<customer_id>')
-def get_customer_by_id(customer_id):
+@cc.route('/customers/<username>')
+def get_customer_by_username(username):
     try:
-        return customer_service.get_customer_by_id(customer_id)
+        return customer_service.get_customer_by_username(username)
     except CustomerNotFoundError as e:
         return {
             "message": str(e)
