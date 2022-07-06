@@ -316,6 +316,6 @@ def test_delete_customer_by_id_negative(mocker):
     customer_service = CustomerService()
 
     with pytest.raises(CustomerNotFoundError) as excinfo:
-        customer_service.delete_customer_by_id("200")
+        actual = customer_service.delete_customer_by_id("200")
 
     assert str(excinfo.value) == "Customer with id 200 was not found"

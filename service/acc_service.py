@@ -23,7 +23,7 @@ class AccService:
         return list(map(lambda a: a.to_dict(), list_of_accounts))
 
     def get_all_accounts_by_customer_id(self, customer_id, query_1, query_2):
-        if self.customer_dao.get_customer_by_id(customer_id) is None:
+        if self.customer_dao.get_customer_by_username(customer_id) is None:
             raise CustomerNotFoundError(f"Customer with id {customer_id} was not found")
 
         if query_1 is None and query_2 is None:
@@ -46,7 +46,7 @@ class AccService:
             return []
 
     def get_account_by_customer_id_and_account_id(self, customer_id, account_id):
-        if self.customer_dao.get_customer_by_id(customer_id) is None:
+        if self.customer_dao.get_customer_by_username(customer_id) is None:
             raise CustomerNotFoundError(f"Customer with id {customer_id} was not found")
         elif self.acc_dao.get_account_by_customer_id_and_account_id(customer_id, account_id) is None:
             raise AccountNotFoundError(f"Customer with id {customer_id} does not have account with id {account_id}")
@@ -55,21 +55,19 @@ class AccService:
 
     def add_account_for_customer_by_customer_id(self, account_obj):
         valid_acc_type = ["savings", "checking", "investment", "retirement"]
-        if self.customer_dao.get_customer_by_id(account_obj.c_id) is None:
+        if self.customer_dao.get_customer_by_username(account_obj.c_id) is None:
             raise CustomerNotFoundError(f"Customer with id {account_obj.c_id} was not found")
+        elif containsSpace(account_obj.type):
+            raise InvalidParameterError(f"Invalid input (space) for the new account! Please try again")
+        elif containsNumber(account_obj.type):
+            raise InvalidParameterError(f"Invalid input (number) for the new account! Please try again")
+        elif containsSpecChar(account_obj.type):
+            raise InvalidParameterError(f"Invalid input (special character) for the new account! Please try again")
         elif account_obj.type not in valid_acc_type:
-            raise InvalidAccountTypeError(f"Invalid account type. Account type must be savings, checking, investment"
+            raise InvalidAccountTypeError(f"Invalid account type. Account type must be savings, checking, investment "
                                           f"or retirement")
         elif account_obj.balance < 0:
             raise InvalidAccountBalanceError(f"Invalid account balance. Account balance must be greater than 0.")
-        elif containsSpace(account_obj.type) or containsSpace(account_obj.balance):
-            raise InvalidParameterError(f"Invalid input (space) for the new customer! Please try again")
-        elif containsLetter(account_obj.balance):
-            raise InvalidParameterError(f"Invalid input (letter) for the new birthday! Please try again")
-        elif containsNumber(account_obj.type):
-            raise InvalidParameterError(f"Invalid input (number) for the new customer! Please try again")
-        elif containsSpecChar(account_obj.balance) or containsSpecChar(account_obj.type):
-            raise InvalidParameterError(f"Invalid input (special character) for the new customer! Please try again")
 
         return self.acc_dao.add_account_for_customer_by_customer_id(account_obj).to_dict()
 
