@@ -39,8 +39,8 @@ def test_get_all_customers(mocker):
 
 
 def test_get_customer_by_id_positive(mocker):
-    def mock_get_customer_by_id(self, user_id):
-        if user_id == "1":
+    def mock_get_customer_by_id(self, username):
+        if username == 'ScottVance0712':
             return Customer(1, 'Scott', 'Vance', '07-12', 'ScottVance0712')
         else:
             return None
@@ -49,7 +49,7 @@ def test_get_customer_by_id_positive(mocker):
 
     customer_service = CustomerService()
 
-    actual = customer_service.get_customer_by_id("1")
+    actual = customer_service.get_customer_by_username("ScottVance0712")
 
     assert actual == {
             "id": 1,
@@ -61,8 +61,8 @@ def test_get_customer_by_id_positive(mocker):
 
 
 def test_get_customer_by_id_negative(mocker):
-    def mock_get_customer_by_id(self, user_id):
-        if user_id == "1":
+    def mock_get_customer_by_id(self, username):
+        if username == 'ScottVance0712':
             return Customer(1, 'Scott', 'Vance', '07-12', 'ScottVance0712')
         else:
             return None
@@ -72,9 +72,9 @@ def test_get_customer_by_id_negative(mocker):
     customer_service = CustomerService()
 
     with pytest.raises(CustomerNotFoundError) as excinfo:
-        actual = customer_service.get_customer_by_id("2000")
+        actual = customer_service.get_customer_by_username("JoeBob1212")
 
-    assert str(excinfo.value) == "Customer with id 2000 was not found"
+    assert str(excinfo.value) == "Customer with username JoeBob1212 was not found"
 
 
 def test_add_customer_positive(mocker):
