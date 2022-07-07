@@ -42,11 +42,11 @@ class CustomerService:
             print('error not caught')
             return self.customer_dao.add_customer(customer_object).to_dict()
 
-    def update_customer_by_id(self, customer_object):
-        if self.customer_dao.update_customer_by_id(customer_object) is None:
+    def update_customer_by_username(self, customer_object):
+        if self.customer_dao.update_customer_by_username(customer_object) is None:
             raise CustomerNotFoundError(f"Customer was not found")
-        return self.customer_dao.update_customer_by_id(customer_object).to_dict()
+        return self.customer_dao.update_customer_by_username(customer_object).to_dict()
 
-    def delete_customer_by_id(self, cus_id):
-        if not self.customer_dao.delete_customer_by_id(cus_id):
-            raise CustomerNotFoundError(f"Customer with id {cus_id} was not found")
+    def delete_customer_by_username(self, username):
+        if not self.customer_dao.delete_customer_by_username(username):
+            raise CustomerNotFoundError(f"Customer with username {username} was not found")

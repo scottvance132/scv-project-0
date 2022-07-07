@@ -61,13 +61,13 @@ class CustomerDao:
                 return Customer(inserted_cus_row[0], inserted_cus_row[1], inserted_cus_row[2], inserted_cus_row[3],
                                 inserted_cus_row[4])
 
-    def update_customer_by_id(self, cus_obj):
+    def update_customer_by_username(self, cus_obj):
         with psycopg.connect(host="127.0.0.1", port='5432', dbname="p0db", user="postgres",
                              password='mAshgAey208') as conn:
             with conn.cursor() as cur:
                 cur.execute("UPDATE customers SET first_name = %s, last_name = %s, birthday = %s, username = %s"
-                            "WHERE id = %s RETURNING *", (cus_obj.first_name, cus_obj.last_name, cus_obj.birthday,
-                                                          cus_obj.username, cus_obj.id))
+                            "WHERE username = %s RETURNING *", (cus_obj.first_name, cus_obj.last_name, cus_obj.birthday,
+                                                                cus_obj.username, cus_obj.id))
 
                 conn.commit()
 
@@ -78,11 +78,11 @@ class CustomerDao:
                 return Customer(updated_cus_row[0], updated_cus_row[1], updated_cus_row[2], updated_cus_row[3],
                                 updated_cus_row[4])
 
-    def delete_customer_by_id(self, cus_id):
+    def delete_customer_by_username(self, username):
         with psycopg.connect(host="127.0.0.1", port='5432', dbname="p0db", user="postgres",
                              password='mAshgAey208') as conn:
             with conn.cursor() as cur:
-                cur.execute('DELETE FROM customers WHERE id = %s', (cus_id,))
+                cur.execute('DELETE FROM customers WHERE username = %s', (username,))
 
                 rows_deleted = cur.rowcount
 

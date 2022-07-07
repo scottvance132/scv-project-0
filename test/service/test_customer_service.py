@@ -245,20 +245,20 @@ def test_add_customer_negative_customer_already_exists(mocker):
     assert str(excinfo.value) == "Customer with username ScottVance0712 already exists"
 
 
-def test_update_customer_by_id_positive(mocker):
+def test_update_customer_by_username_positive(mocker):
     update_cus_obj = Customer(1, "Jeff", "Smith", "01-01", "JeffSmith0101")
 
-    def mock_update_customer_by_id(self, customer_obj):
-        if customer_obj.id == 1:
+    def mock_update_customer_by_username(self, customer_obj):
+        if customer_obj.username == 'JeffSmith0101':
             return Customer(1, "Jeff", "Smith", "01-01", "JeffSmith0101")
         else:
             return None
 
-    mocker.patch("dao.customer_dao.CustomerDao.update_customer_by_id", mock_update_customer_by_id)
+    mocker.patch("dao.customer_dao.CustomerDao.update_customer_by_username", mock_update_customer_by_username)
 
     customer_service = CustomerService()
 
-    actual = customer_service.update_customer_by_id(update_cus_obj)
+    actual = customer_service.update_customer_by_username(update_cus_obj)
 
     assert actual == {
         "id": 1,
@@ -269,53 +269,53 @@ def test_update_customer_by_id_positive(mocker):
     }
 
 
-def test_update_customer_by_id_negative(mocker):
+def test_update_customer_by_username_negative(mocker):
     update_cus_obj = Customer(1, "Jeff", "Smith", "01-01", "JeffSmith0101")
 
-    def mock_update_customer_by_id(self, customer_obj):
-        if customer_obj.id == 20:
-            return Customer(1, "Jeff", "Smith", "01-01", "JeffSmith0101")
+    def mock_update_customer_by_username(self, customer_obj):
+        if customer_obj.username == 'JeffSmith1101':
+            return Customer(1, "Jeff", "Smith", "01-01", "JeffSmith1101")
         else:
             return None
 
-    mocker.patch('dao.customer_dao.CustomerDao.update_customer_by_id', mock_update_customer_by_id)
+    mocker.patch('dao.customer_dao.CustomerDao.update_customer_by_username', mock_update_customer_by_username)
 
     customer_service = CustomerService()
 
     with pytest.raises(CustomerNotFoundError) as excinfo:
-        actual = customer_service.update_customer_by_id(update_cus_obj)
+        actual = customer_service.update_customer_by_username(update_cus_obj)
 
     assert str(excinfo.value) == "Customer was not found"
 
 
-def test_delete_customer_by_id_positive(mocker):
-    def mock_delete_customer_by_id(self, cus_id):
-        if cus_id == '1':
+def test_delete_customer_by_username_positive(mocker):
+    def mock_delete_customer_by_username(self, username):
+        if username == 'JeffSmith0101':
             return True
         else:
             return False
 
-    mocker.patch("dao.customer_dao.CustomerDao.delete_customer_by_id", mock_delete_customer_by_id)
+    mocker.patch("dao.customer_dao.CustomerDao.delete_customer_by_username", mock_delete_customer_by_username)
 
     customer_service = CustomerService()
 
-    actual = customer_service.delete_customer_by_id('1')
+    actual = customer_service.delete_customer_by_username('JeffSmith0101')
 
     assert actual is None
 
 
-def test_delete_customer_by_id_negative(mocker):
-    def mock_delete_customer_by_id(self, cus_id):
-        if cus_id == '1':
+def test_delete_customer_by_username_negative(mocker):
+    def mock_delete_customer_by_username(self, username):
+        if username == 'JeffSmith0101':
             return True
         else:
             return False
 
-    mocker.patch("dao.customer_dao.CustomerDao.delete_customer_by_id", mock_delete_customer_by_id)
+    mocker.patch("dao.customer_dao.CustomerDao.delete_customer_by_username", mock_delete_customer_by_username)
 
     customer_service = CustomerService()
 
     with pytest.raises(CustomerNotFoundError) as excinfo:
-        actual = customer_service.delete_customer_by_id("200")
+        actual = customer_service.delete_customer_by_username("JeffSmith01011")
 
-    assert str(excinfo.value) == "Customer with id 200 was not found"
+    assert str(excinfo.value) == "Customer with username JeffSmith01011 was not found"

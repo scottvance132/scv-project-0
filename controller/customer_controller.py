@@ -45,11 +45,11 @@ def add_customer():
         }, 400
 
 
-@cc.route('/customers/<customer_id>', methods=['PUT'])
-def update_customer_by_id(customer_id):
+@cc.route('/customers/<username>', methods=['PUT'])
+def update_customer_by_username(username):
     try:
         customer_json_dictionary = request.get_json()
-        return customer_service.update_customer_by_id(Customer(customer_id, customer_json_dictionary['first_name'],
+        return customer_service.update_customer_by_username(Customer(username, customer_json_dictionary['first_name'],
                                                                customer_json_dictionary['last_name'],
                                                                customer_json_dictionary['birthday'],
                                                                customer_json_dictionary['username']))
@@ -59,13 +59,13 @@ def update_customer_by_id(customer_id):
         }, 404
 
 
-@cc.route('/customers/<customer_id>', methods=['DELETE'])
-def delete_customer_by_id(customer_id):
+@cc.route('/customers/<username>', methods=['DELETE'])
+def delete_customer_by_username(username):
     try:
-        customer_service.delete_customer_by_id(customer_id)
+        customer_service.delete_customer_by_username(username)
         return {
-            "message": f"Customer with id {customer_id} and all accounts belonging to customer with id {customer_id} "
-                       f"deleted successfully"
+            "message": f"Customer with username {username} and all accounts belonging to customer with username "
+                       f"{username} deleted successfully"
         }
     except CustomerNotFoundError as e:
         return {
